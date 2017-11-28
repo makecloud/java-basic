@@ -1,47 +1,43 @@
-package com.liuyihui;
+package com.liuyihui.common;
 
+import ch.qos.logback.classic.LoggerContext;
 import com.liuyihui.common.Enum.EResumeWay;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.liuyihui.common.Enum.EResumeWay.WILL_RESUME_AUTO;
 import static com.liuyihui.common.Enum.EResumeWay.WILL_RESUME_BY_EXTERNAL;
 
+
 /**
- * Unit test for simple App.
+ * 测试类
  */
-public class AppTest
-        extends TestCase {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest(String testName) {
-        super(testName);
+public class AppTest {
+    Logger logger;
+
+    @Before
+    public void bef() {
+//        logger = LoggerFactory.getLogger(AppTest.class);
+        logger = LoggerFactory.getLogger("com.liuyihuis");
+
     }
 
     /**
-     * @return the suite of tests being tested
+     * 测试类名
      */
-    public static Test suite() {
-        return new TestSuite(AppTest.class);
-    }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp() {
-        assertTrue(true);
-    }
-
-    public void test1() {
+    @Test
+    public void testClassName() {
         System.out.println(AppTest.class.getPackage());
         System.out.println(AppTest.class.getName());
     }
 
-    public void test2() {
+    /**
+     * 测试枚举
+     */
+    @Test
+    public void testSwithEnum() {
         EResumeWay parm = WILL_RESUME_AUTO;
         switch (parm) {
             case WILL_RESUME_AUTO:
@@ -50,7 +46,7 @@ public class AppTest
                 break;
         }
 
-        parm = null;
+//        parm = null;
         switch (parm) {
             case WILL_RESUME_AUTO:
                 System.out.println(WILL_RESUME_AUTO);
@@ -64,10 +60,15 @@ public class AppTest
         System.out.println(WILL_RESUME_AUTO.name());
         System.out.println(EResumeWay.valueOf("WILL_RESUME_AUTO"));
 //        System.out.println(Enum.valueOf(EResumeWay.class, ""));//报错
-
     }
 
-    public void test3() {
-        Action1<String> action1 = new Action1<>();
+    @Test
+    public void testLogbackLogger() {
+        LoggerContext loggerContext= (LoggerContext) LoggerFactory.getILoggerFactory();
+
+        logger.debug("日志:debug");
+        logger.info("日志:info");
+        logger.warn("警告:warning");
     }
+
 }

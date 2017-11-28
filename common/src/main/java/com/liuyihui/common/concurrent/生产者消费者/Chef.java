@@ -34,7 +34,7 @@ public class Chef implements Runnable {
                 System.out.println("produce one meal ~");
                 restaurant.setMeal(new Meal(count));//准备一份食物
                 synchronized (restaurant.getWaitPerson()) {
-                    restaurant.getWaitPerson().notifyAll();//通知所有消费者
+                    restaurant.getWaitPerson().notifyAll();//通知消费者
                 }
                 Thread.sleep(1000);
             }

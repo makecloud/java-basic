@@ -1,4 +1,4 @@
-package com.liuyihui.common.util;
+package com.liuyihui.common.security;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -21,9 +21,9 @@ public class HMACSHA1 {
 	
 	/**
 	 * 加密方法
-	 * @param src 代加密的字节数据
+	 * @param src 待加密的字节
 	 * @param key 密钥
-	 * @return 加密后的字节数据
+	 * @return 加密后的字节
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeyException
 	 * @throws UnsupportedEncodingException 
