@@ -27,4 +27,11 @@ public class FileUtilTest {
                 "/a668f37b7cdbced21543b952b7592c27.jpg");
         System.out.println(file.getName());
     }
+
+    @Test
+    public void testDeleteNotEmptyDir(){
+        File dir = new File("C:\\Users\\liuyi\\Desktop\\not empty");
+        boolean deleted =FileUtil.deleteNotEmptyDir(dir);
+        System.out.println(deleted);
+    }
 }
