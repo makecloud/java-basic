@@ -1,5 +1,6 @@
 package com.liuyihui.common.reactivexdemo;
 
+import org.junit.Test;
 import rx.*;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -7,14 +8,18 @@ import rx.functions.Cancellable;
 import rx.functions.Func1;
 import rx.observables.AsyncOnSubscribe;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
+import rx.subjects.Subject;
 
 import java.util.concurrent.TimeUnit;
 
 
 /**
- * 使用RxJava案例<br>
- * 项目中以此标准运用
+ * 使用RxJava 1 案例<br>
+ * 实际项目中可按此标准运用
  */
+
 public class ReactiveXDemo {
 
     /**
@@ -63,7 +68,7 @@ public class ReactiveXDemo {
 
         });
         //添加观察者4
-        observable.subscribe(new Subscriber<String>() {
+        Subscription subscription4 = observable.subscribe(new Subscriber<String>() {
             @Override
             public void onCompleted() {
 
@@ -80,6 +85,7 @@ public class ReactiveXDemo {
             }
         });
 
+        //?
 
     }
 
@@ -88,15 +94,19 @@ public class ReactiveXDemo {
      * 测试doOnSubscribe  <br>
      * 测试doOnNext<br>
      * 测试运用不同线程
+     * <p>
+     * 今天,我将这种方式类比于微信公众号:
+     * Observable相当于一个微信公众号
+     * 创建observable时传入OnSubscribe对象,相当于对微信公众号设置订阅(关注)响应.例:我一关注A公众号,A公众号立马给我发来一句话"欢迎订阅".
+     * OnSubScribe的call方法逻辑就相当于: 公众号被订阅时立即发欢迎消息.
      */
-    public void rxJavaBasic() {
+    public void rxJavaCreateUsage() {
 
         //用create方法创建一个被观察者
         Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
-                //通过配置,可以指定线程执行onSubscribe逻辑
-                System.out.println("OnSubscribe" + ". run on threadName:" + Thread.currentThread().getName());
+                System.out.println("OnSubscribe.call" + ". run on threadName:" + Thread.currentThread().getName());
                 //使onSubscribe的线程等待
                 try {
                     Thread.sleep(1000);
@@ -107,10 +117,10 @@ public class ReactiveXDemo {
             }
         });
         //配置observable
-        observable = observable.subscribeOn(Schedulers.computation());//指定onSubscribe逻辑在..线程
-        observable = observable.observeOn(Schedulers.newThread());//指定Observer的逻辑在..线程
+        observable = observable.subscribeOn(Schedulers.newThread());//指定onSubscribe逻辑在..线程
+        observable = observable.observeOn(Schedulers.newThread());//指定Observer(subscriber)的逻辑在..线程
 
-        //添加doOnSubscribe动作,执行在onSubscribe call逻辑之前,doOnSubscribe动作执行在main线程
+        //添加doOnSubscribe动作,执行在onSubscribe call逻辑之前,doOnSubscribe动作执行在什么线程还未搞明白
         observable = observable.doOnSubscribe(new Action0() {
             @Override
             public void call() {
@@ -119,7 +129,7 @@ public class ReactiveXDemo {
         });
 
 
-        //添加doOnNext动作1, 执行在observer逻辑之前 ,doOnNext动作跟随observer在指定的observer的线程执行
+        //添加doOnNext动作1, 执行在observer逻辑之前 ,doOnNext动作在什么线程还未搞明白
         observable = observable.doOnNext(new Action1<String>() {
             @Override
             public void call(String s) {
@@ -134,14 +144,14 @@ public class ReactiveXDemo {
             }
         });
 
-        //加入监听者1
+        //订阅1
         observable.subscribe(new Action1<String>() {//在调用subscribe的时候,执行OnSubscribe周期, 调用ubscriber.onNext
             @Override
             public void call(String s) {
                 System.out.println("Action1's call " + s + ". run on threadName:" + Thread.currentThread().getName());
             }
         });
-        //加入监听者2
+        //加订阅2
         /*observable.subscribe(new Subscriber<String>() {
             @Override
             public void onCompleted() {
@@ -157,6 +167,7 @@ public class ReactiveXDemo {
                 System.out.println("Subscriber's onNext" + ". run on threadName:" + Thread.currentThread().getName());
             }
         });*/
+
 
         //主线程等待,以观察打印
         try {
@@ -192,6 +203,8 @@ public class ReactiveXDemo {
      * 测试RxJava的 map概念及运用
      */
     public void rxJavaMap() {
+
+        //usage 1.
         Observable<Integer> observable = Observable.just(new Entity1()).map(new Func1<Entity1, Integer>() {
             @Override
             public Integer call(Entity1 entity1) {
@@ -199,24 +212,29 @@ public class ReactiveXDemo {
             }
         });
 
-        Observable<Long> observable1 = Observable.just(new Long(2));
-        observable1.map(new Func1<Long, Entity1>() {
+        //usage 2.
+        Observable<Long> observable1 = Observable.just(2L);
+        Observable<Entity1> observableOfEntity1 = observable1.map(new Func1<Long, Entity1>() {
             @Override
             public Entity1 call(Long aLong) {
                 return null;
             }
         });
-        Observable<Double> observable2 = observable1.map(new Func1<Long, Double>() {
+
+        //usage 3.
+        Observable<Double> observableOfDouble = observable1.map(new Func1<Long, Double>() {
             @Override
             public Double call(Long aLong) {
                 return null;
             }
         });
 
+        //就是经过map方法后, 可以将创建出来的Observable转换为另一种数据类型的. 所以map方法还算好理解
+
     }
 
     /**
-     * 一种设计模式: 让普通方法用上Observable, 可以实现这个方法被执行在不同的线程<p>
+     * 一种实际应用模式: 让普通方法用上Observable, 可以实现这个方法被执行在不同的线程<p>
      * 返回一个定义好OnSubscribe的Observable<br>
      * 这个observable的OnSubscribe 为作为此方法的逻辑
      *
@@ -245,6 +263,7 @@ public class ReactiveXDemo {
      * todo
      */
     public void useEmitter() {
+        //创建emitter
         final Emitter<String> emitter = new Emitter<String>() {
             @Override
             public void setSubscription(Subscription subscription) {
@@ -276,7 +295,7 @@ public class ReactiveXDemo {
 
             }
         };
-        //
+        //创建SubScription
         final Subscription subscription = Observable.create(new Action1<Emitter<String>>() {
             @Override
             public void call(Emitter<String> emitter) {
@@ -302,7 +321,7 @@ public class ReactiveXDemo {
                     }
                 });
 
-        //
+        //创建Observable
         Observable.create(new Action1<Emitter<Object>>() {
             @Override
             public void call(Emitter<Object> objectEmitter) {
@@ -311,6 +330,8 @@ public class ReactiveXDemo {
                 emitter.requested();
             }
         }, Emitter.BackpressureMode.DROP).subscribe();
+
+        //
     }
 
     /**
@@ -347,6 +368,103 @@ public class ReactiveXDemo {
                 System.out.println("subscriber.onNext");
             }
         });
+    }
+
+    /**
+     * 使用Subject类
+     * Subject类即是订阅者也是被观察者.
+     * <p>
+     * 用subject可以随时随地的发射事件,即对订阅者onNext的调用
+     * <p>
+     * 这才是纯粹的事件驱动
+     */
+    public void useSubject() {
+        Subject subject = new SerializedSubject(PublishSubject.create());
+
+        //添加订阅者
+        subject.observeOn(Schedulers.newThread())
+                .subscribe(new Subscriber() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+                        System.out.println("onNext: " + o + "==:" + Thread.currentThread().getName());
+                    }
+
+                });
+
+
+        //这里产生事件,发送给订阅者,订阅者可以在任何线程消费此事件
+        subject.onNext("ssss");
+
+    }
+
+    @Test
+    public void timer() {
+        Observable.timer(5, TimeUnit.SECONDS)
+                .subscribe(new Action1<Long>() {
+                    @Override
+                    public void call(Long aLong) {
+                        System.out.println("aa");
+                    }
+                });
+
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void useConcat() {
+        Observable<String> obs1 = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext("obs1");
+                subscriber.onError(new Throwable("obs1 err"));
+//                subscriber.onNext("oba11");
+            }
+        });
+        Observable<String> obs2 = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext("obs2");
+            }
+        });
+        Observable<String> obs3 = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext("obs3");
+            }
+        });
+
+        Observable.concatDelayError(obs1, obs2, obs3)
+                .first()
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                        System.out.println("complete");
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        System.out.println("onError:" + throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        System.out.println("onNext:" + s);
+                    }
+                });
     }
 
 }

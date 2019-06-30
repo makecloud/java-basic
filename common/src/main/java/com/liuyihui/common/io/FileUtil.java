@@ -23,10 +23,10 @@ public class FileUtil {
      * @param filePath 文件路径
      * @return 文件对象
      */
-    public static File createDirIfNoExist(String filePath) {
+    public static File createFileIfNoExist(String filePath) throws IOException {
         File file = new File(filePath);
-        if (!file.exists()) {
-            file.mkdirs();
+        if (!file.exists() || file.isDirectory()) {
+            file.createNewFile();
         }
         return file;
     }
@@ -65,12 +65,12 @@ public class FileUtil {
     //--------------------------------------------读--------------------------------------
 
     /**
-     * 文件 -> String
+     * 文件内容 -> String
      *
      * @param fileName 文件名
      * @return 文件内容str
      */
-    public static String readStrFromFile(String fileName) {
+    public static String readStrFromFile(String fileName) throws IOException {
         String result = "";
         char[] temp = new char[4096];
         Reader reader = null;
@@ -80,17 +80,9 @@ public class FileUtil {
             while ((len = reader.read(temp)) != -1) {
                 result += String.valueOf(temp, 0, len);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                reader.close();
             }
         }
         return result;
@@ -102,17 +94,13 @@ public class FileUtil {
      * @param is 输入流对象
      * @return 字符串
      */
-    public static String readInputStreamToStr(InputStream is) {
+    public static String readInputStreamToStr(InputStream is) throws IOException {
         int i;
         char c;
         StringBuilder sb = new StringBuilder();
-        try {
-            while ((i = is.read()) != -1) {
-                c = (char) i;
-                sb.append(c);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        while ((i = is.read()) != -1) {
+            c = (char) i;
+            sb.append(c);
         }
         return sb.toString();
     }
@@ -123,18 +111,15 @@ public class FileUtil {
      * @param isr 输入reader对象
      * @return 字符串
      */
-    public static String readInputstreamReaderToStr(InputStreamReader isr) {
+    public static String readInputstreamReaderToStr(InputStreamReader isr) throws IOException {
         int i;
         char c;
         StringBuilder sb = new StringBuilder();
-        try {
-            while ((i = isr.read()) != -1) {
-                c = (char) i;
-                sb.append(c);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        while ((i = isr.read()) != -1) {
+            c = (char) i;
+            sb.append(c);
         }
+
         return sb.toString();
     }
 
@@ -143,15 +128,13 @@ public class FileUtil {
     /**
      * pojo对象写入文件
      *
-     * @param f   文件
+     * @param f 文件
      * @param obj pojo对象
      */
-    public static void objWriteToFile(File f, Object obj) {
-
+    public static void objWriteToFile(File f, Object obj) throws IOException {
         String str = JSON.toJSONString(obj);
         FileWriter fileWriter = null;
-
-        //文件锁，可能有多个线程同时处理素材列表文件
+        //文件锁，可能有多个线程同时处理文件
         FileReadWriteLock lock = FileReadWriteLock.get(f.getAbsolutePath());
         boolean flag;
         try {
@@ -162,15 +145,9 @@ public class FileUtil {
                 lock.unlock();
             }
             lock = null;
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
-            try {
-                if (fileWriter != null) {
-                    fileWriter.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (fileWriter != null) {
+                fileWriter.close();
             }
         }
     }
@@ -178,15 +155,13 @@ public class FileUtil {
     /**
      * str写入文件
      *
-     * @param f   文件
+     * @param f 文件
      * @param str
      */
-    public static void strWriteToFile(File f, String str) {
+    public static void strWriteToFile(File f, String str) throws IOException {
 
         FileWriter fileWriter = null;
-        /**
-         * <p>文件锁，可能有多个线程同时处理素材列表文件</p>
-         */
+        //文件锁，可能有多个线程同时写文件
         FileReadWriteLock lock = FileReadWriteLock.get(f.getAbsolutePath());
         boolean flag;
         try {
@@ -197,8 +172,6 @@ public class FileUtil {
                 lock.unlock();
             }
             lock = null;
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             try {
                 if (fileWriter != null) {
@@ -212,7 +185,9 @@ public class FileUtil {
     //--------------------------------------------删-------------------------------------
 
     /**
-     * 递归删除目录下的所有文件及子目录下所有文件
+     * 删除文件夹
+     * <p>
+     * 递归删除文件夹下的所有文件及子文件夹下的所有文件
      *
      * @param dir 将要删除的文件目录
      * @return boolean Returns "true" if all deletions were successful.

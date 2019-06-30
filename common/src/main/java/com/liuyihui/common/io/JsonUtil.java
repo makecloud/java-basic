@@ -44,21 +44,17 @@ public class JsonUtil {
      * json文件 ->  Pojo对象
      *
      * @param pojoclass Pojo类class
-     * @param file      存储json的文件
+     * @param file 存储json的文件
      * @param <T>
      * @return pojo对象
      */
-    public static <T> T readJsonFileToObject(Class<T> pojoclass, File file) {
+    public static <T> T readJsonFileToObject(Class<T> pojoclass, File file) throws IOException {
         T type = null;
-        try {
-            FileReadWriteLock lock = FileReadWriteLock.get(file.getAbsolutePath());
-            boolean flag = lock.obtain();
-            if (flag) {
-                type = JSON.parseObject(readStrFromFile(file.getAbsolutePath()), pojoclass);
-                lock.unlock();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        FileReadWriteLock lock = FileReadWriteLock.get(file.getAbsolutePath());
+        boolean flag = lock.obtain();
+        if (flag) {
+            type = JSON.parseObject(readStrFromFile(file.getAbsolutePath()), pojoclass);
+            lock.unlock();
         }
         return type;
     }
@@ -69,7 +65,7 @@ public class JsonUtil {
      * @param fileName 文件名
      * @return 文件内容str
      */
-    public static String readStrFromFile(String fileName) {
+    public static String readStrFromFile(String fileName) throws IOException {
         String result = "";
         char[] temp = new char[4096];
         Reader reader = null;
@@ -79,17 +75,9 @@ public class JsonUtil {
             while ((len = reader.read(temp)) != -1) {
                 result += String.valueOf(temp, 0, len);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                reader.close();
             }
         }
         return result;

@@ -21,7 +21,7 @@ public class ReactivexDemoTest {
 
     @Test
     public void testRxJavaBasic() {
-        reactiveXDemo.rxJavaBasic();
+        reactiveXDemo.rxJavaCreateUsage();
     }
 
     @Test
@@ -47,6 +47,11 @@ public class ReactivexDemoTest {
     @Test
     public void testuseAsyncOnSubscribe(){
         reactiveXDemo.useAsyncOnSubscribe();
+    }
+
+    @Test
+    public void testuseSubject(){
+        reactiveXDemo.useSubject();
     }
 
 }

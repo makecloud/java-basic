@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.transform.Source;
+
 import static com.liuyihui.common.Enum.EResumeWay.WILL_RESUME_AUTO;
 import static com.liuyihui.common.Enum.EResumeWay.WILL_RESUME_BY_EXTERNAL;
 
@@ -64,11 +66,42 @@ public class AppTest {
 
     @Test
     public void testLogbackLogger() {
-        LoggerContext loggerContext= (LoggerContext) LoggerFactory.getILoggerFactory();
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
         logger.debug("日志:debug");
         logger.info("日志:info");
         logger.warn("警告:warning");
+    }
+
+    /**
+     * 测试用整型变量接收除法结果
+     */
+    @Test
+    public void testDivision() {
+        int num = 5 / 2;
+        System.out.println(num);// 打印2.
+    }
+
+    /**
+     * 测试split能否分离出""空串
+     */
+    @Test
+    public void testEmpty() {
+        String s = "a" + "," + "";
+        System.out.println(s.split(",").length);//长度是1
+        System.out.println(s.split(",")[0]);//打印a
+        System.out.println(s.split(",")[1]);//抛越界异常
+    }
+
+    /**
+     * 测试substring Index
+     */
+    @Test
+    public void testSubstringIndex(){
+        String str="18:19";
+        System.out.println(str.substring(3,5));
+        System.out.println(str.split(":")[0]);
+        System.out.println(str.split(":")[1]);
     }
 
 }
