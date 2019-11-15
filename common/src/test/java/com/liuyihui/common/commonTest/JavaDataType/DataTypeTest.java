@@ -27,7 +27,7 @@ public class DataTypeTest {
         //从数据库取出10进制数据
         Integer fetchData = 16;//
         //Integer fetchData = dao.get();
-        int bit1 = fetchData & 1;// 按位与1,则获得最后一位值.
+        int bit1 = fetchData & 1;// 按位与1,则获得最后一位bit值.
         int bit2 = (fetchData >> 1) & 1;//向右移一位,让原本第二位到最右,然后与1,获得原本第二位的值.
         int bit3 = (fetchData >> 2) & 1;//向右移二位,让原本第三位到最右,然后与1,获得原本第三位的值.
         int bit4 = (fetchData >> 3) & 1;//向右移三位,让原本第四位到最右,然后与1,获得原本第四位的值.

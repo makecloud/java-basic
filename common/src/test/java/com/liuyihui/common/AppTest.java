@@ -77,9 +77,36 @@ public class AppTest {
      * 测试用整型变量接收除法结果
      */
     @Test
-    public void testDivision() {
-        int num = 5 / 2;
-        System.out.println(num);// 打印2.
+    public void testIntDivision() {
+        int num = 1 / 2;
+        System.out.println(num);// 结果打印0。
+        num = 1 % 2;
+        System.out.println(num);// 结果打印1。记住1%2等于1
+        num = 5 / 2;
+        System.out.println(num);// 结果打印2. 说明结果下取整
+        num = 5 % 2;
+        System.out.println(num);// 结果打印1. 实际余数
+        num = 4 % 2;
+        System.out.println(num);// 结果打印0。实际余数
+
+        System.out.println(~1);
+        System.out.println(~0);
+
+        System.out.println(52 / 25);
+    }
+
+
+    /**
+     * float型除法
+     */
+    @Test
+    public void testFloatDivision() {
+        float a = 78f;
+        float r = a / 100;
+        System.out.println(r);
+
+        System.out.println((int) (0.78f / 0.25f));
+
     }
 
     /**
@@ -97,11 +124,24 @@ public class AppTest {
      * 测试substring Index
      */
     @Test
-    public void testSubstringIndex(){
-        String str="18:19";
-        System.out.println(str.substring(3,5));
+    public void testSubstringIndex() {
+        String str = "18:19";
+        System.out.println(str.substring(3, 5));
         System.out.println(str.split(":")[0]);
         System.out.println(str.split(":")[1]);
+    }
+
+    /**
+     * 数字长度不够前面补0
+     */
+    @Test
+    public void numberAdd0() {
+        int closeHour = 9;
+        System.out.println(String.format("%02d", closeHour));//输出09
+        closeHour = 19;
+        System.out.println(String.format("%02d", closeHour));//输出19
+        closeHour = 199;
+        System.out.println(String.format("%02d", closeHour));//输出199
     }
 
 }
