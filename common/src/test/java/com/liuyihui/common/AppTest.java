@@ -19,12 +19,12 @@ import static com.liuyihui.common.Enum.EResumeWay.WILL_RESUME_BY_EXTERNAL;
 public class AppTest {
     Logger logger;
 
-    @Before
+    /*@Before
     public void bef() {
-//        logger = LoggerFactory.getLogger(AppTest.class);
-        logger = LoggerFactory.getLogger("com.liuyihuis");
+        logger = LoggerFactory.getLogger(AppTest.class);
+//        logger = LoggerFactory.getLogger("com.liuyihuis");
 
-    }
+    }*/
 
     /**
      * 测试类名
@@ -39,7 +39,7 @@ public class AppTest {
      * 测试枚举
      */
     @Test
-    public void testSwithEnum() {
+    public void testSwitchEnum() {
         EResumeWay parm = WILL_RESUME_AUTO;
         switch (parm) {
             case WILL_RESUME_AUTO:
@@ -142,6 +142,30 @@ public class AppTest {
         System.out.println(String.format("%02d", closeHour));//输出19
         closeHour = 199;
         System.out.println(String.format("%02d", closeHour));//输出199
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testPrint() {
+        // | / - \ | / - \
+        char[] c = new char[]{'|', '/', '-', '\\', '|', '/', '-', '\\'};
+        int i = 0;
+        System.out.println(c[i]);
+        while (true) {
+            System.out.print(c[i]);
+            System.out.print("\r");
+            i++;
+            if (i >= c.length) {
+                i = 0;
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-package com.liuyihui.common.http;
+package com.liuyihui.common.net.http;
 
 import java.io.Serializable;
 
