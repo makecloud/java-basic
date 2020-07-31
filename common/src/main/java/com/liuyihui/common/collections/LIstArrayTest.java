@@ -2,6 +2,7 @@ package com.liuyihui.common.collections;
 
 import org.junit.Test;
 
+import java.nio.file.Watchable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,5 +30,41 @@ public class LIstArrayTest {
                 .replaceAll("]", "")
                 .replaceAll(" ", "")
         );
+    }
+
+    private void pramPass(final List<String> param) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(param);
+
+            }
+        }).start();
+    }
+
+    @Test
+    public void testParamPass() {
+
+        List<String> oneList = new ArrayList<>();
+        oneList.add("fdsf");
+        oneList.add("klj");
+        oneList.add("134s0");
+
+        pramPass(oneList);
+
+        oneList.clear();
+
+
+        try {
+            Thread.sleep(10 * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }

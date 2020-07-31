@@ -1,11 +1,16 @@
 package com.liuyihui.common.classTypeProblems;
 
+import com.liuyihui.common.Enum.EResumeWay;
 import com.liuyihui.common.classTypeProblems.entity.Container;
 import com.liuyihui.common.classTypeProblems.entity.PositionAbstract;
 import com.liuyihui.common.classTypeProblems.entity.PositionAbstractSelectable;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.liuyihui.common.Enum.EResumeWay.WILL_RESUME_AUTO;
+import static com.liuyihui.common.Enum.EResumeWay.WILL_RESUME_BY_EXTERNAL;
 
 public class TestClassType {
 
@@ -15,6 +20,43 @@ public class TestClassType {
         testListCast();
     }
 
+    /**
+     * 测试类名
+     */
+    @Test
+    public void testClassName() {
+        System.out.println(TestClassType.class.getPackage());
+        System.out.println(TestClassType.class.getName());
+    }
+
+    /**
+     * 测试枚举
+     */
+    @Test
+    public void testSwitchEnum() {
+        EResumeWay parm = WILL_RESUME_AUTO;
+        switch (parm) {
+            case WILL_RESUME_AUTO:
+                break;
+            default:
+                break;
+        }
+
+//        parm = null;
+        switch (parm) {
+            case WILL_RESUME_AUTO:
+                System.out.println(WILL_RESUME_AUTO);
+            case WILL_RESUME_BY_EXTERNAL:
+                System.out.println(WILL_RESUME_BY_EXTERNAL);
+            default:
+                System.out.println("null");
+        }
+
+        System.out.println(WILL_RESUME_AUTO);
+        System.out.println(WILL_RESUME_AUTO.name());
+        System.out.println(EResumeWay.valueOf("WILL_RESUME_AUTO"));
+//        System.out.println(Enum.valueOf(EResumeWay.class, ""));//报错
+    }
     /**
      * 父类的对象赋值给子类的引用, 类型转换失败.
      */
