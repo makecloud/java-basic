@@ -2,7 +2,12 @@ package com.liuyihui.common.time;
 
 import org.junit.Test;
 
+import javax.xml.crypto.Data;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class TimeOperations {
 
@@ -62,5 +67,40 @@ public class TimeOperations {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 测试时间字符串转date后，date年份日期是现在还是1970
+     */
+    @Test
+    public void testDate() {
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("HH:mm:ss", Locale.CHINESE).parse("18:45:2");
+        } catch (ParseException e) {
+            return;
+        }
+
+
+        Calendar calendar = Calendar.getInstance();
+
+        System.out.println(new Date());
+        System.out.println(date);
+        System.out.println(date.getHours());
+        System.out.println(date.getMinutes());
+        System.out.println(date.getSeconds());
+        System.out.println(calendar.getTime());
+        System.out.println(date.getTime());
+        System.out.println(System.currentTimeMillis());
+
+
+        calendar.set(Calendar.HOUR_OF_DAY, date.getHours());
+        calendar.set(Calendar.MINUTE, date.getMinutes());
+        calendar.set(Calendar.SECOND, date.getSeconds());
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        System.out.println(calendar.getTime());
+        System.out.println(calendar.getTimeInMillis());
+        System.out.println(System.currentTimeMillis());
     }
 }
