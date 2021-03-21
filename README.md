@@ -1,2 +1,2 @@
 # java-basic
-java基本的用法，以及使用案例
+java语言基本，各种demo探索
