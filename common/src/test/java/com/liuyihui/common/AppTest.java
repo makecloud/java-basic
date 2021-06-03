@@ -27,7 +27,6 @@ public class AppTest {
     }*/
 
 
-
     @Test
     public void testLogbackLogger() {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -35,6 +34,12 @@ public class AppTest {
         logger.debug("日志:debug");
         logger.info("日志:info");
         logger.warn("警告:warning");
+    }
+
+    @Test
+    public void testStringContain() {
+        String matFileName = "FJDSKJFDLSFLAG.pdf";
+        System.out.println(matFileName.contains("."));
     }
 
 }

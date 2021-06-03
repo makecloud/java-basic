@@ -3,7 +3,7 @@ package com.liuyihui.common.concurrent.interruptdemo;
 import org.junit.Test;
 
 /**
- * 测试interrupt作用
+ * 测试interrupt效果作用
  */
 public class InterruptDemo {
 
@@ -13,11 +13,15 @@ public class InterruptDemo {
         int i = 0;
         while (true) {
             System.out.println(i++);
+
+            //在第5秒，执行interrupt
             if (i == 5) {
                 Thread.currentThread().interrupt();
                 //如果写try catch， 被interrupt时，则走一次catch，然后继续循环，相当于continue
                 //不写try catch，在方法名将异常抛出，此线程停止
-                //这只是sleep和wait期间被interrupt，在之外的代码执行期间也一样被interrupt发生在try内肯定相当于continue，线程继续走。
+                //上述还只是sleep和wait阻塞期间被interrupt的结果
+                //而在之外的代码执行期间也一样，被interrupt发生在try内肯定catch住继续走trycatch块之外的逻辑，相当于continue，线程继续走。
+                //被interrupt 没有捕获interrupt异常，则线程停止。
             }
 
             synchronized (this) {

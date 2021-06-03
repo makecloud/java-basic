@@ -1,6 +1,7 @@
 package com.liuyihui.common.collections;
 
 import org.junit.Test;
+import sun.jvmstat.perfdata.monitor.AliasFileParser;
 
 import java.nio.file.Watchable;
 import java.util.ArrayList;
@@ -66,5 +67,30 @@ public class LIstArrayTest {
             e.printStackTrace();
         }
 
+    }
+
+
+    /**
+     * 测试两个list怎样才能包含
+     */
+    @Test
+    public void testListContains() {
+        List<BannerEntity> aList = new ArrayList<>();
+        List<BannerEntity> bList = new ArrayList<>();
+
+
+        aList.add(new BannerEntity(1L, (short) 2, "fjdkaf322", 234));
+        aList.add(new BannerEntity(1L, (short) 2, "fjdkaf322", 234));
+        aList.add(new BannerEntity(1L, (short) 2, "fjdkaf322", 234));
+
+//        bList.add(new BannerEntity(1L, (short) 2, "fjdkaf322", 234));
+//        bList.add(new BannerEntity(1L, (short) 2, "fjdkaf322", 234));
+//        bList.add(new BannerEntity(1L, (short) 2, "fjdkaf322", 234));
+
+
+        boolean equal = aList.containsAll(bList);
+        System.out.println(equal);
+        //结果；重写实体对象的equal，每个对象equal了，list就contains了
+        
     }
 }

@@ -95,11 +95,12 @@ public class ReactiveXDemo {
      * 测试doOnNext<br>
      * 测试运用不同线程
      * <p>
-     * 今天,我将这种方式类比于微信公众号:
+     * 此时,我将这种方式类比于微信公众号:
      * Observable相当于一个微信公众号
      * 创建observable时传入OnSubscribe对象,相当于对微信公众号设置订阅(关注)响应.例:我一关注A公众号,A公众号立马给我发来一句话"欢迎订阅".
      * OnSubScribe的call方法逻辑就相当于: 公众号被订阅时立即发欢迎消息.
      */
+    @Test
     public void rxJavaCreateUsage() {
 
         //用create方法创建一个被观察者
@@ -116,9 +117,10 @@ public class ReactiveXDemo {
                 subscriber.onNext("ttt");//这里可以触发去另一个线程执行observer的逻辑
             }
         });
+
         //配置observable
         observable = observable.subscribeOn(Schedulers.newThread());//指定onSubscribe逻辑在..线程
-        observable = observable.observeOn(Schedulers.newThread());//指定Observer(subscriber)的逻辑在..线程
+        observable = observable.observeOn(Schedulers.io());//指定Observer(subscriber)的逻辑在..线程
 
         //添加doOnSubscribe动作,执行在onSubscribe call逻辑之前,doOnSubscribe动作执行在什么线程还未搞明白
         observable = observable.doOnSubscribe(new Action0() {
@@ -129,7 +131,8 @@ public class ReactiveXDemo {
         });
 
 
-        //添加doOnNext动作1, 执行在observer逻辑之前 ,doOnNext动作在什么线程还未搞明白
+        //添加doOnNext动作1, 执行在observer逻辑之前
+        //doOnNext的线程跟observeOn设置时机有关系：在设置doOnNext之前设置observeOn就在observeOn的线程,否则就在subscribeOn的
         observable = observable.doOnNext(new Action1<String>() {
             @Override
             public void call(String s) {
@@ -151,7 +154,8 @@ public class ReactiveXDemo {
                 System.out.println("Action1's call " + s + ". run on threadName:" + Thread.currentThread().getName());
             }
         });
-        //加订阅2
+
+        //订阅2
         /*observable.subscribe(new Subscriber<String>() {
             @Override
             public void onCompleted() {

@@ -2,6 +2,9 @@ package com.liuyihui.common.datastructure;
 
 import java.nio.file.Path;
 
+/**
+ * 循环从一个集合里去数据
+ */
 public class PathMenu {
     private String[] paths = new String[]{"/sdcard/oohlink/player/" + ".screen" +
             "/0A638DE2475566D0691CECD3F00B19D3",

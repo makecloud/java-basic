@@ -83,12 +83,83 @@ public class DataTypeTest {
         System.out.println(52 / 25);
     }
 
+    /**
+     * 测试long除法，取整型结果的情况
+     */
+    @Test
+    public void testLongDivLong() {
+        long a = 7531667456L, b = 52567826432L;//a10位 b11位
+        System.out.println(a / b);// 0
+        System.out.println(((int) (a / b)));// 0
+
+        System.out.println(b / a);// 6
+        System.out.println(((int) (b / a)));// 6
+
+        //long 除 long 结果转为整型，则为0或者正整数
+    }
+
+    /**
+     * 测试long除法，取小数结果的情况
+     */
+    @Test
+    public void testLongDivLong2() {
+        long a = 7531667456L, b = 52567826432L;//a10位 b11位
+        float resut1 = a / b;
+        float resut2 = b / a;
+
+        System.out.println(resut1);
+        System.out.println(resut2);
+
+        //long 除 long 结果转为float型，只是再整数结果的基础上加了个 .0
+
+    }
+
+    /**
+     * 测试long除法，取小数结果的情况
+     */
+    @Test
+    public void testLongDivLong3() {
+        long a = 7531667456L, b = 52567826432L;//a10位 b11位
+        float resut1 = (float) a / b;
+        float resut2 = (float) b / a;
+
+        System.out.println(resut1);//0.14327523
+        System.out.println(resut2);//6.9795732
+
+        //long 除 long , 先将被除数转float再除，得到了很长的小数
+    }
+
+    /**
+     * 测试long型 除法 下，四舍五入情况
+     */
     @Test
     public void testLongDivision() {
         long a = 7531667456L, b = 52567826432L;//a10位 b11位
 
+        //转成float再除
         int result = (int) (((float) a / (float) b) * 100);
         System.out.println(result);
+
+
+        long duration1 = 20999L;
+        long duration2 = 5000L;
+
+        float times = duration1 / duration2;
+        int timesInt = (int) (duration1 / duration2);
+
+
+        int timesAfterCeil = (int) Math.ceil(times);
+
+        System.out.println(times);
+        System.out.println(timesInt);
+        System.out.println(timesAfterCeil);
+
+        //
+        long nodeActualDuration = 29966L;
+        int c = 15;
+        long nodeRemainIdleDuration = nodeActualDuration / 1000 - c;
+        System.out.println(Math.round(nodeActualDuration / 1000F));
+        System.out.println(nodeRemainIdleDuration);
     }
 
     /**
@@ -102,5 +173,31 @@ public class DataTypeTest {
         System.out.println(String.format("%02d", closeHour));//输出19
         closeHour = 199;
         System.out.println(String.format("%02d", closeHour));//输出199
+    }
+
+    /**
+     * 测试float小数上下取整
+     */
+    @Test
+    public void testGetIntegerOfFloat() {
+        float a = 0.234f;
+        float b = 5.819f;
+
+        //round 是四舍五入
+        System.out.println(Math.round(a));
+        System.out.println(Math.round(b));
+
+        //floor下取整
+        System.out.println(Math.floor(a));
+        System.out.println(Math.floor(b));
+
+        //转出的int也是下取整
+        System.out.println((int) a);
+        System.out.println((int) b);
+
+        //上取整
+        System.out.println(Math.ceil(a));
+        System.out.println(Math.ceil(b));
+
     }
 }

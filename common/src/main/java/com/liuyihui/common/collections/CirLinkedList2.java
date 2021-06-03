@@ -1,15 +1,19 @@
 package com.liuyihui.common.collections;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class CirLinkedList<T> extends ConcurrentLinkedQueue<T> {
+/**
+ * 可以查看下一个的，循环获取元素队列
+ *
+ * @param <T>
+ */
+public class CirLinkedList2<T> extends ConcurrentLinkedQueue<T> {
     Iterator<T> iterator;
     Iterator<T> latterIterator;
     T next;
 
-    public CirLinkedList() {
+    public CirLinkedList2() {
         super();
         this.iterator = iterator();
         this.latterIterator = iterator();
@@ -40,13 +44,13 @@ public class CirLinkedList<T> extends ConcurrentLinkedQueue<T> {
 
 
     public static void main(String[] args) {
-        CirLinkedList<Integer> cirLinkedList = new CirLinkedList<>();
+        CirLinkedList2<Integer> cirLinkedList2 = new CirLinkedList2<>();
 
-        cirLinkedList.add(1);
-        cirLinkedList.add(2);
-        cirLinkedList.add(3);
-        cirLinkedList.add(4);
-        cirLinkedList.add(5);
+        cirLinkedList2.add(1);
+        cirLinkedList2.add(2);
+        cirLinkedList2.add(3);
+        cirLinkedList2.add(4);
+        cirLinkedList2.add(5);
 
         int i = 0;
 
@@ -57,16 +61,16 @@ public class CirLinkedList<T> extends ConcurrentLinkedQueue<T> {
                 i++;
 
                 /*if (i == 3) {
-                    cirLinkedList.add(78875);
-                    cirLinkedList.add(32);
-                    cirLinkedList.add(82564);
-                    cirLinkedList.add(362);
+                    cirLinkedList2.add(78875);
+                    cirLinkedList2.add(32);
+                    cirLinkedList2.add(82564);
+                    cirLinkedList2.add(362);
                 }*/
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            System.out.println(cirLinkedList.next() + "," + cirLinkedList.peekLatter());
+            System.out.println(cirLinkedList2.next() + "," + cirLinkedList2.peekLatter());
         }
     }
 

@@ -21,19 +21,19 @@ public class UseExecutorService {
         //create executor
         ExecutorService poolExecutor1 = Executors.newFixedThreadPool(2);
         ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(2,
-                                                                 5,
-                                                                 2,
-                                                                 TimeUnit.SECONDS,
-                                                                 new ArrayBlockingQueue<Runnable>(50));
+                5,
+                2,
+                TimeUnit.SECONDS,
+                new ArrayBlockingQueue<Runnable>(50));
 
         //create task
-        MyRunner task1 = new MyRunner();
-        MyRunner task2 = new MyRunner();
-        MyRunner task3 = new MyRunner();
-        MyRunner task4 = new MyRunner();
-        MyRunner task5 = new MyRunner();
-        MyRunner task6 = new MyRunner();
-        MyRunner task7 = new MyRunner();
+        MyRunner task1 = new MyRunner("task1");
+        MyRunner task2 = new MyRunner("task2");
+        MyRunner task3 = new MyRunner("task3");
+        MyRunner task4 = new MyRunner("task4");
+        MyRunner task5 = new MyRunner("task5");
+        MyRunner task6 = new MyRunner("task6");
+        MyRunner task7 = new MyRunner("task7");
 
         //push task in
         poolExecutor.execute(task1);
@@ -52,9 +52,9 @@ public class UseExecutorService {
         System.out.println("isTerminated: " + poolExecutor.isTerminated());
 
 
-        //close pool
-        poolExecutor.shutdown();
-        System.out.println("call shutdown !");
+        //do close pool
+        //poolExecutor.shutdown();
+        //System.out.println("call shutdown !");
 
         // 1.不调shutdown, 线程不会到达terminated
         // 2.调shutdown后再提交任务抛reject(拒绝)异常
@@ -89,14 +89,19 @@ public class UseExecutorService {
 }
 
 class MyRunner implements Runnable {
+    private String taskName;
+
+    public MyRunner(String taskName) {
+        this.taskName = taskName;
+    }
 
     @Override
     public void run() {
+        System.out.println(String.format("task:%s useThread:%s start.", taskName, Thread.currentThread().getName()));
         try {
-            Thread.sleep(1000);//等一秒
+            Thread.sleep(5000);//等x秒
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(Thread.currentThread().getName() + " run.");
     }
 }
