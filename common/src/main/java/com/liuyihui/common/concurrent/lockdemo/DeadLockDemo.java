@@ -32,9 +32,8 @@ public class DeadLockDemo {
     }
 
     /*
-    交叉锁，两个线程双方互等对方的锁。 建立在有2个锁的情况下
+     * 交叉锁，两个线程双方互等对方的锁。 建立在有2个锁的情况下
      */
-
     class ThreadA extends Thread {
         @Override
         public void run() {
