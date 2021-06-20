@@ -33,13 +33,14 @@ public class InterruptDemo {
 
                 // 上述 只是sleep和wait阻塞期间被interrupt会抛异常，你用try catch捕获了就过一下catch然后继续走。当我把这个异常抛到test方法外面，线程停了
 
-                // try内sleep之后写了其他逻辑，则正在sleep的时候被interrupt，直接从sleep位置跳过其他逻辑进入catch！
+                // try内sleep前后写了有其他逻辑，则正在sleep/await的期间被interrupt，直接从sleep位置跳过其他逻辑进入catch！
 
-                // 其他计算型逻辑代码被interrupt是不会抛interrupt异常的，也不会直接让线程停止，只会设置线程的interrupt标志。
+                // 在sleep/wait之外的其他计算逻辑执行期间,被interrupt是不会抛interrupt异常的，也不会直接让线程停止，只会设置线程的interrupt标志,当走到sleep/wait时发现有阻塞标志也会抛异常.
 
             }
 
             synchronized (this) {
+                System.out.println("begin wait 1s");
                 this.wait(1000);
             }
             System.out.println("go on\n");
@@ -73,12 +74,11 @@ public class InterruptDemo {
                         e.printStackTrace();
                         System.out.println("in InterruptedException catch clause, has always cleared the interrupt status. isInterrupted:" + isInterrupted());
                         //打印结果：被interrupt然后抛异常走到这里 查看isInterrupted还是false
-                        //线程在sleep、await等等待中被调用interrupt或者发现设置了interrupt标志，会抛个异常，然后将interrupt标识清除掉（置为false）。
+                        //线程在sleep、await等等待期间被调用interrupt或者发现设置了interrupt标志，会抛个异常，然后将interrupt标识清除掉（置为false）。
                         // 在某些IO操作，和正常的计算中被调用interrupt，会仅设置一下interrupt标识为true
 
                         // 看sleep()方法文档：
 
-                        //IllegalArgumentException – if the value of millis is negative
                         //InterruptedException – if any thread has interrupted the current thread. The interrupted status of the current thread is cleared when this exception is thrown.
 
                         //也说明了，如果这个异常抛出，将会把线程的interrupt状态删除掉。
